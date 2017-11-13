@@ -1,0 +1,3 @@
+**/*.vim
+syntax/html
+syntax/javascript

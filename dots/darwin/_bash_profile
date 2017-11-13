@@ -1,0 +1,22 @@
+# vim :set filetype=sh syntax=sh:
+
+: "Java" && {
+	export JAVA_HOME=$(/usr/libexec/java_home)
+}
+
+: "Go" && {
+	export GOPATH=${HOME}/go
+}
+
+: "nvm" || {
+	export NVM_DIR=$HOME/.nvm
+	. /usr/local/opt/nvm/nvm.sh
+}
+
+[ -r ${HOME}/.bashrc ] && . ${HOME}/.bashrc
+
+: "PATHs" && {
+	PATH=${PATH}:${GOPATH}/bin
+	export PATH
+}
+

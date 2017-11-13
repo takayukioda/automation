@@ -1,0 +1,49 @@
+[user]
+	name = takayukioda
+	email = takayuki@odashi.me
+[core]
+	editor = vim
+	pager = less -r -FX
+	autocrlf = false
+	quotepath = false
+	filemode = false
+	excludesfile = ~/.globalignore
+[color]
+	ui = auto
+[alias]
+	life       = !echo "No Git, No Life"
+	aliass     = !git config --get-regexp alias
+	me         = !git config --get-regexp user
+	l          = log --oneline
+	ld         = log --decorate --oneline
+	lp         = log --abbrev-commit --color --pretty=format:'%C(yellow)%h%Creset -%C(yellow reverse)%d%Creset %s %C(blue)(%cr)%C(red)<%an>%Creset'
+	ls         = log --decorate --oneline --stat
+	lg         = log --decorate --oneline --graph
+	nerge      = merge --no-ff
+	purr       = pull --rebase
+	stat       = status --short --branch
+	ibase      = !sh -c 'git rebase -i $(git merge-base ${1:-master} HEAD)' -
+	unstage    = reset HEAD --
+	cancel     = reset --mixed HEAD^
+	skip       = update-index --skip-worktree
+	noskip     = update-index --no-skip-worktree
+	plune      = !git branch --merged | grep -vE '(master|develop|release|gh-pages|\\*)' | xargs git branch -d
+	files      = !cd ${GIT_PREFIX:-.} && git ls-tree -z --name-only HEAD | xargs -0 -n1 -I@ -- git log -1 --pretty=format:'%C(green)%ai%Creset %C(yellow)%h%Creset @ %C(blue)(%ar)%Creset %C(red)<%an>%Creset' -- @
+	wdiff      = diff --word-diff --ignore-all-space
+[help]
+	autocorrect = 0
+[push]
+	default = simple
+[merge]
+	conflictstyle = diff3
+[github]
+	user = takayukioda
+[filter "media"]
+	clean = git-media-clean %f
+	smudge = git-media-smudge %f
+[difftool "sourcetree"]
+	cmd = opendiff \"$LOCAL\" \"$REMOTE\"
+	path = 
+[mergetool "sourcetree"]
+	cmd = /Applications/SourceTree.app/Contents/Resources/opendiff-w.sh \"$LOCAL\" \"$REMOTE\" -ancestor \"$BASE\" -merge \"$MERGED\"
+	trustExitCode = true

@@ -1,0 +1,11 @@
+let g:netrw_dirhistmax  =10
+let g:netrw_dirhist_cnt =9
+let g:netrw_dirhist_1='/Users/takayukio/github.com/jphacks/automate/.git'
+let g:netrw_dirhist_2='/Users/takayukio/github.com/jphacks/automate'
+let g:netrw_dirhist_3='/Users/takayukio/github.com/jphacks/automate/lib'
+let g:netrw_dirhist_4='/Users/takayukio/tmp/ansible'
+let g:netrw_dirhist_5='/Users/takayukio/tmp/ansible/inventory'
+let g:netrw_dirhist_6='/Users/takayukio/tmp/ansible/roles'
+let g:netrw_dirhist_7='/Users/takayukio/tmp/ansible/inventory'
+let g:netrw_dirhist_8='/Users/takayukio/.ssh'
+let g:netrw_dirhist_9='/Users/takayukio/github.com/takayukioda/automation'

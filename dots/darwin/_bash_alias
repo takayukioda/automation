@@ -1,0 +1,30 @@
+# bash
+
+# default command
+alias ls="ls -F"
+alias la="ls -a"
+alias ll="ls -lh"
+alias lla="ls -alh"
+alias rm="rm -i"
+alias mv="mv -i"
+alias cp="cp -i"
+alias less='less -gMj2';
+
+# for typo
+alias l='ls'
+alias s='ls'
+alias sl='ls'
+# alias tsk='task'
+# alias taks='task'
+
+#shellscript
+
+
+if [ -d /Applications ]; then
+	alias ls="ls -GF"
+	alias preview="open -a Preview"
+fi
+
+docker-noname () {
+	docker images --filter "dangling=true" -q
+}

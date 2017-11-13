@@ -1,0 +1,199 @@
+" vim: set ts=4 sw=4 sts=0:
+
+" Encoding {{{
+set encoding=utf-8
+scriptencoding utf-8
+set fileencodings=utf-8,cp932,eucjp-ms,iso-2022-jp,latin1
+set fileformats=unix,dos,mac
+
+" Deal with some double width characters
+if exists('&ambiwidth')
+	set ambiwidth=double
+endif
+" }}}
+
+" Environment {{{
+command! VimrcReload source $MYVIMRC
+function! VimrcEnvironment ()
+	let env = {}
+	let env.is_win = has('win32')  || has ('win64')
+
+	let userdir = env.is_win
+				\ ? expand('$VIM/vimfiles')
+				\ : expand('~/.vim')
+	let env.path = {
+				\ 'user':        userdir,
+				\ 'local_vimrc': userdir . '/.vimrc',
+				\ 'tmp':         userdir . '/tmp'
+				\ }
+	return env
+endfunction
+
+function! VimrcSupports ()
+	let supports = {}
+	return supports
+endfunction
+
+let s:env = VimrcEnvironment()
+let s:supports = VimrcSupports()
+" }}}
+
+" Mapping {{{
+" Turn off the IME when escaping from Insert mode @Insert
+set timeout timeoutlen=1000 ttimeoutlen=75
+inoremap <silent> <ESC> <ESC>:<C-u>set iminsert=0<CR>
+" Avoid execute 'x' by <Del> and move as 'h'; for HHK
+nnoremap <Del> <Left>
+" Avoid execute <C-@> @Insert
+inoremap <C-@> <Nop>
+" Yank to end of the line, like 'D' / 'C' @Normal
+nnoremap Y y$
+" Avoid execute 'x' by <Del> and move as 'h'; for HHK
+nnoremap <Del> <Left>
+" easier to set nohlsearch
+nnoremap <Esc><Esc> :noh<CR>
+
+" Emacs-like keybind @Command-line @Insert
+cnoremap <C-a> <Home>
+cnoremap <C-e> <End>
+cnoremap <C-b> <Left>
+cnoremap <C-f> <Right>
+cnoremap <C-h> <Backspace>
+cnoremap <C-d> <Del>
+" one-liner for Emacs-like line delete
+cnoremap <C-k> <C-\>e getcmdpos() == 1 ? '' : getcmdline()[:getcmdpos()-2]<CR>
+inoremap <C-h> <Backspace>
+inoremap <C-d> <Del>
+
+" Refer to history @Command-line
+cnoremap <C-p> <Up>
+cnoremap <C-n> <Down>
+" }}}
+
+" Misc {{{
+" Set to use 16 colors terminal option
+set t_Co=16
+set modeline
+set showtabline=2
+
+set number
+set showmatch
+set display=lastline
+set virtualedit=block
+
+set wildmenu
+set wildmode=list:full
+set laststatus=2
+set showcmd
+set statusline=%<%f\ %m%r%h%w%{'['.(&fenc!=''?&fenc:&enc).']['.&ff.']'}%=%l,%c%V%8P
+
+set nrformats-=octal
+set formatoptions& formatoptions+=mMj
+set formatoptions-=qro
+set whichwrap=b,s,<,>
+set backspace=indent,eol
+
+" Backup
+set directory=~/.vim/swp
+set backupdir=~/.vim/swp
+set nobackup
+
+" Indent
+set noexpandtab
+set autoindent
+set cindent
+set smartindent
+set smarttab
+set nolist
+set listchars=tab:^\ ,eol:~,trail:_,nbsp:%
+set tabstop=4
+set shiftwidth=4
+set softtabstop=0
+
+" Search
+set hlsearch
+set noignorecase
+set smartcase
+set wrapscan
+set noincsearch
+
+colorscheme slate
+"}}}
+"
+"File Type and Coding Style {{{
+let g:format_allow_over_tw = 1
+if has('syntax')
+	syntax on
+endif
+
+filetype plugin indent on
+augroup vimrc_filetype
+	" Clean autocmds before setting
+	autocmd!
+
+	" File Type from Extension
+	autocmd BufNewFile,BufRead *.ctp setlocal filetype=php
+	autocmd BufNewFile,BufRead *.twig setlocal filetype=htmljinja
+	autocmd BufNewFile,BufRead *.md setlocal filetype=markdown
+	autocmd BufNewFile,BufRead .bash* setlocal filetype=sh
+	autocmd BufNewFile,BufRead *.tex setlocal filetype=tex
+	autocmd BufNewFile,BufRead *.sbt setlocal filetype=scala
+	autocmd BufNewFile,BufRead *.gradle setlocal filetype=groovy
+
+	" Coding Style from File Type
+	autocmd FileType vim setlocal foldmethod=marker
+	autocmd FileType markdown setlocal tabstop=4 shiftwidth=4 expandtab
+	autocmd FileType html setlocal tabstop=2 shiftwidth=2 expandtab indentexpr&
+	autocmd FileType css setlocal tabstop=2 shiftwidth=2 expandtab
+	autocmd FileType scss setlocal tabstop=2 shiftwidth=2 expandtab
+	autocmd FileType javascript setlocal tabstop=2 shiftwidth=2 expandtab 
+	autocmd FileType coffee setlocal tabstop=2 shiftwidth=2 expandtab
+	autocmd FileType json setlocal tabstop=2 shiftwidth=2 expandtab
+	autocmd FileType python setlocal tabstop=4 shiftwidth=4 expandtab
+	autocmd FileType ruby setlocal tabstop=2 shiftwidth=2 expandtab
+	autocmd FileType php setlocal tabstop=4 shiftwidth=4
+	autocmd FileType jinja setlocal tabstop=4 shiftwidth=4 expandtab
+	autocmd FileType gitcommit setlocal spell spelllang=en_us
+	autocmd FileType yaml setlocal tabstop=2 shiftwidth=2 expandtab
+	autocmd FileType * setlocal formatoptions-=ro
+augroup END
+" }}}
+
+" Autocompletepop {{{
+if exists('g:acp_enableAtStartup')
+	function! InnsertTabWrapper()
+		let col = col('.') -1
+		if !col || getline('.')[col - 1] !~ '\k'
+			return '<\TAB>'
+		else
+			if pumvisible()
+				return '\<C-N>'
+			else
+				return '\<C-N>\<C-P>'
+			end
+		endif
+	endfunction
+endif
+" }}}
+
+" vim-plug {{{
+call plug#begin('~/.vim/plugged')
+
+" Plug 'othree/yajs.vim'
+Plug 'cakebaker/scss-syntax.vim'
+
+Plug 'cespare/vim-toml'
+
+Plug 'derekwyatt/vim-scala'
+
+Plug 'ianks/vim-tsx'
+
+Plug 'leafgarland/typescript-vim'
+
+Plug 'maxmellon/vim-jsx-pretty'
+let g:vim_jsx_pretty_colorful_config = 1
+
+Plug 'pangloss/vim-javascript'
+
+call plug#end()
+" }}}

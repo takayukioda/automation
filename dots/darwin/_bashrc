@@ -1,0 +1,96 @@
+#!/bin/bash
+# If not running interactively, don't do anything
+[ -z "$PS1" ] && return
+
+: "history" && {
+	HISTCONTROL=ignoreboth
+	HISTSIZE=2500
+	HISTFILESIZE=5000
+}
+
+# check the window size after each command and, if necessary,
+# update the values of LINES and COLUMNS.
+shopt -s checkwinsize
+
+# brew --prefix: /usr/local
+readonly BREW_PREFIX=/usr/local
+
+: "completion" && {
+	if [ -f $BREW_PREFIX/etc/bash_completion ] && ! shopt -oq posix; then
+		. $BREW_PREFIX/etc/bash_completion
+	fi
+}
+
+# brew --prefix bash-git-prompt: /usr/local/opt/bash-git-prompt
+: "git prompt" && {
+	readonly BREW_PREFIX_BASHGITPROMPT=$BREW_PREFIX/opt/bash-git-prompt
+	if [ -f "$BREW_PREFIX_BASHGITPROMPT/share/git-prompt.sh" ]; then
+		# GIT_PROMPT_THEME=Default
+		. "$BREW_PREFIX_BASHGITPROMPT/share/git-prompt.sh"
+	fi
+	[ $(type -t __git_ps1) ] && gitps1="__git_ps1"
+}
+
+
+
+# prompt
+# assume we have color support
+PS1='\[\e]0;\w\a\]\[\e[33m\]\w$(${gitps1})\[\e[0m\]\n\[\e[32m\]\u@\h\[\e[0m\] \$ '
+case ${TERM} in
+	eterm-color | dumb )
+		PS1='\w$(${gitps1})\n\u@\h \$ '
+		;;
+	linux )
+		export LANG=C
+		PS1='\[\e[33m\]\w$(${gitps1})\[\e[0m\]\n\[\e[32m\]\u@\h\[\e[0m\] \$ '
+		;;
+	screen | xterm )
+		TERM=xterm-256color
+		;;
+	* ) ;;
+esac
+
+: "exports" && {
+	: "basic" && {
+		export EDITOR=vim
+		export PAGER='less -gMj2r'
+
+		: "prompt" && {
+			export TERM
+			export PS1
+		}
+	}
+
+	: "aws" && {
+		export AWS_DEFAULT_PROFILE=codecheck
+	}
+}
+
+: "Alias definitions" && {
+	[ -r ${HOME}/.bash_alias ] && . ${HOME}/.bash_alias
+}
+
+: "define function" && {
+	__pecostry__() {
+		sed -E 's/^ +[0-9]+\*? *//' <(history) | sort | uniq | peco
+	}
+	bind '"\C-r": "\C-e\C-u`__pecostry__`\e\C-e\e^"'
+
+	finco() {
+		ext=${1:-''}
+		dir=${2:-.}
+		find ${dir} -name "*${ext}" | peco
+	}
+
+	__gh__() {
+		find ${HOME}/github.com -type d -maxdepth 2 | peco
+	}
+
+	pd() {
+		cd $(__gh__)
+	}
+}
+
+: "load direnv" && {
+	eval "$(direnv hook bash)"
+}
