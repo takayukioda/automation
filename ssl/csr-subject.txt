@@ -1,0 +1,19 @@
+JP
+Tokyo
+Shibuya
+Individual
+.
+domain.example.com
+contact@example.com
+.
+
+# Country Name
+# State / Province Name
+# Locality Name
+# Organization Name
+# Organization Unit Name
+# Common Name (primary domain)
+# Email Address
+# Challenge Password (if you want to set passphrase)
+# 
+# By giving "." as parameter, it sets empty value
