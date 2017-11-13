@@ -10,9 +10,9 @@ Usage: $0 <prefix> [subjfile]
 	
 	# Direcotry Structure
 	<prefix>
-		|
-		+- <prefix>.csr
-		+- <prefix>.key
+	    \\
+	     +- <prefix>.csr
+	     +- <prefix>.key
 EOF
 }
 
