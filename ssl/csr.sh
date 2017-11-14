@@ -22,13 +22,13 @@ if [ $# -lt 1 ]; then
 fi
 
 prefix=$1
-subjfile="$2"
+subjfile=$2
 
 #
 # Conditional redirection technique; set subject file as file discriptor 3, or else use stdin
 # Reference: https://stackoverflow.com/a/1987561
 #
-[ -r $subjfile ] && exec 3<$subjfile || exec 3<&0
+[ -r "$subjfile" ] && exec 3<$subjfile || exec 3<&0
 
 mkdir -p $prefix
 cd $prefix
