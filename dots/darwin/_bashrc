@@ -35,14 +35,14 @@ readonly BREW_PREFIX=/usr/local
 
 # prompt
 # assume we have color support
-PS1='\[\e]0;\w\a\]\[\e[33m\]\w$(${gitps1})\[\e[0m\]\n\[\e[32m\]\u@\h\[\e[0m\] \$ '
+PS1='\[\e]0;\w\a\]\[\e[33m\]\w\[\e[35m\]$(${gitps1})\n\[\e[36m\]\D{%R} \[\e[32m\]\u@\h\[\e[0m\] \$ '
 case ${TERM} in
 	eterm-color | dumb )
-		PS1='\w$(${gitps1})\n\u@\h \$ '
+		PS1='\w$(${gitps1})\n\D{%R} \u@\h \$ '
 		;;
 	linux )
 		export LANG=C
-		PS1='\[\e[33m\]\w$(${gitps1})\[\e[0m\]\n\[\e[32m\]\u@\h\[\e[0m\] \$ '
+		PS1='\[\e[33m\]\w\[\e[35m\]$(${gitps1})\n\[\e[36m\]\D{%R} \[\e[32m\]\u@\h\[\e[0m\] \$ '
 		;;
 	screen | xterm )
 		TERM=xterm-256color
