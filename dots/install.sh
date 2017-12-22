@@ -18,9 +18,9 @@ to_dot() {
 install_to_home() {
 	local from=$1
 	local file=$(basename $from)
-	local to=${HOME}/tmp/sandbox/$(echo $file | to_dot)
+	local to=${HOME}/$(echo $file | to_dot)
 
-	[ -r ${to} ] && echo "skipping... $file already exists" && return 1
+	[ -r ${to} ] && echo "skipping... $to already exists" && return 1
 	echo "placing $file" && ln -sv $from $to
 	# echo "placing $file" && echo ln -s $from $to
 }
