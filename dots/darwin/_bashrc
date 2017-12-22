@@ -4,8 +4,8 @@
 
 : "history" && {
 	HISTCONTROL=ignoreboth
-	HISTSIZE=2500
-	HISTFILESIZE=5000
+	HISTSIZE=5000
+	HISTFILESIZE=10000
 }
 
 # check the window size after each command and, if necessary,
@@ -23,42 +23,48 @@ readonly BREW_PREFIX=/usr/local
 
 # brew --prefix bash-git-prompt: /usr/local/opt/bash-git-prompt
 : "git prompt" && {
-	readonly BREW_PREFIX_BASHGITPROMPT=$BREW_PREFIX/opt/bash-git-prompt
-	if [ -f "$BREW_PREFIX_BASHGITPROMPT/share/git-prompt.sh" ]; then
+	if [ -f "$BREW_PREFIX/opt/git/etc/bash_completion.d/git-prompt.sh" ]; then
 		# GIT_PROMPT_THEME=Default
-		. "$BREW_PREFIX_BASHGITPROMPT/share/git-prompt.sh"
+		. "$BREW_PREFIX/opt/git/etc/bash_completion.d/git-prompt.sh"
+	elif [ -f "$BREW_PREFIX/opt/bash-git-prompt/share/git-prompt.sh" ]; then
+		# GIT_PROMPT_THEME=Default
+		. "$BREW_PREFIX/opt/bash-git-prompt/share/git-prompt.sh"
 	fi
 	[ $(type -t __git_ps1) ] && gitps1="__git_ps1"
 }
 
+: "prompt" && {
+	# assume we have color support
+	PS1='\[\e]0;\w\a\]\[\e[33m\]\w\[\e[35m\]$(${gitps1})\n\[\e[36m\]\D{%R} \[\e[32m\]\u@\h\[\e[0m\] \$ '
+	case ${TERM} in
+		eterm-color | dumb )
+			PS1='\w$(${gitps1})\n\D{%R} \u@\h \$ '
+			;;
+		linux )
+			export LC_CTYPE=C
+			export LANG=C
+			PS1='\[\e[33m\]\w\[\e[35m\]$(${gitps1})\n\[\e[36m\]\D{%R} \[\e[32m\]\u@\h\[\e[0m\] \$ '
+			;;
+		screen | xterm )
+			TERM=xterm-256color
+			;;
+		* ) ;;
+	esac
+}
 
-
-# prompt
-# assume we have color support
-PS1='\[\e]0;\w\a\]\[\e[33m\]\w\[\e[35m\]$(${gitps1})\n\[\e[36m\]\D{%R} \[\e[32m\]\u@\h\[\e[0m\] \$ '
-case ${TERM} in
-	eterm-color | dumb )
-		PS1='\w$(${gitps1})\n\D{%R} \u@\h \$ '
-		;;
-	linux )
-		export LANG=C
-		PS1='\[\e[33m\]\w\[\e[35m\]$(${gitps1})\n\[\e[36m\]\D{%R} \[\e[32m\]\u@\h\[\e[0m\] \$ '
-		;;
-	screen | xterm )
-		TERM=xterm-256color
-		;;
-	* ) ;;
-esac
+: "rust" && {
+	[ -f ${HOME}/.cargo/env ] && . ${HOME}/.cargo/env
+}
 
 : "exports" && {
 	: "basic" && {
 		export EDITOR=vim
 		export PAGER='less -gMj2r'
+		[ "$LC_CTYPE" = 'UTF-8' ] && export LC_CTYPE='en_US.UTF-8'
+		[ -z "$LANG" ] && export LANG='en_US.UTF-8'
 
-		: "prompt" && {
-			export TERM
-			export PS1
-		}
+		export TERM
+		export PS1
 	}
 
 	: "aws" && {
@@ -66,11 +72,11 @@ esac
 	}
 }
 
-: "Alias definitions" && {
+: "alias" && {
 	[ -r ${HOME}/.bash_alias ] && . ${HOME}/.bash_alias
 }
 
-: "define function" && {
+: "functions" && {
 	__pecostry__() {
 		sed -E 's/^ +[0-9]+\*? *//' <(history) | sort | uniq | peco
 	}

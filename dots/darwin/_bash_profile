@@ -1,22 +1,35 @@
-# vim :set filetype=sh syntax=sh:
+#!/bin/bash
+
+: "local bin" && {
+	[ -d /usr/local/bin ] && PATH=/usr/local/bin:${PATH}
+	[ -d ${HOME}/bin ]   && PATH=${HOME}/bin:${PATH}
+	[ -d ${HOME}/esp/xtensa-esp32-elf/bin ] && PATH=${PATH}:${HOME}/esp/xtensa-esp32-elf/bin
+}
 
 : "Java" && {
-	export JAVA_HOME=$(/usr/libexec/java_home)
+	readonly javahome=/usr/libexec/java_home
+	[ -x $javahome ] && export JAVA_HOME=$($javahome)
+	[ -n "$JAVA_HOME" ] && PATH=${PATH}:${JAVA_HOME}/bin
 }
 
 : "Go" && {
-	export GOPATH=${HOME}/go
+	[ -d ${HOME}/go ] && export GOPATH=${HOME}/go
+	[ -n "$GOPATH" ] && PATH=${PATH}:${GOPATH}/bin
 }
 
 : "nvm" || {
-	export NVM_DIR=$HOME/.nvm
+	export NVM_DIR=${HOME}/.nvm
 	. /usr/local/opt/nvm/nvm.sh
 }
 
-[ -r ${HOME}/.bashrc ] && . ${HOME}/.bashrc
-
-: "PATHs" && {
-	PATH=${PATH}:${GOPATH}/bin
+: "Export" && {
+	export LC_CTYPE=en_US.UTF-8
+	export LANG=en_US.UTF-8
 	export PATH
 }
 
+: "Load bashrc" && {
+	[ -r ${HOME}/.bashrc ]	&& . ${HOME}/.bashrc
+}
+
+# vim :set filetype=sh syntax=sh:
