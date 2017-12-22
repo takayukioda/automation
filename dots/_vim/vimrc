@@ -146,7 +146,7 @@ augroup vimrc_filetype
 	autocmd FileType html setlocal tabstop=2 shiftwidth=2 expandtab indentexpr&
 	autocmd FileType css setlocal tabstop=2 shiftwidth=2 expandtab
 	autocmd FileType scss setlocal tabstop=2 shiftwidth=2 expandtab
-	autocmd FileType javascript setlocal tabstop=2 shiftwidth=2 expandtab 
+	autocmd FileType javascript setlocal tabstop=2 shiftwidth=2 expandtab
 	autocmd FileType coffee setlocal tabstop=2 shiftwidth=2 expandtab
 	autocmd FileType json setlocal tabstop=2 shiftwidth=2 expandtab
 	autocmd FileType python setlocal tabstop=4 shiftwidth=4 expandtab
@@ -179,21 +179,32 @@ endif
 " vim-plug {{{
 call plug#begin('~/.vim/plugged')
 
-" Plug 'othree/yajs.vim'
-Plug 'cakebaker/scss-syntax.vim'
-
-Plug 'cespare/vim-toml'
-
-Plug 'derekwyatt/vim-scala'
-
-Plug 'ianks/vim-tsx'
-
-Plug 'leafgarland/typescript-vim'
-
+" JavaScript
 Plug 'maxmellon/vim-jsx-pretty'
 let g:vim_jsx_pretty_colorful_config = 1
-
 Plug 'pangloss/vim-javascript'
+Plug 'cakebaker/scss-syntax.vim'
+Plug 'leafgarland/typescript-vim'
+Plug 'ianks/vim-tsx'
+" Plug 'othree/yajs.vim'
+
+" Scala
+Plug 'derekwyatt/vim-scala'
+
+" Go
+Plug 'fatih/vim-go'
+
+" Rust
+Plug 'rust-lang/rust.vim'
+
+"Haskell
+Plug 'dag/vim2hs'
+let g:haskell_conceal = 0
+
+" Config
+Plug 'cespare/vim-toml'
+
+
 
 call plug#end()
 " }}}
