@@ -77,10 +77,10 @@ readonly BREW_PREFIX=/usr/local
 }
 
 : "functions" && {
-	__pecostry__() {
+	__peco_history__() {
 		sed -E 's/^ +[0-9]+\*? *//' <(history) | sort | uniq | peco
 	}
-	bind '"\C-r": "\C-e\C-u`__pecostry__`\e\C-e\e^"'
+	bind '"\C-r": "\C-e\C-u`__peco_history__`\e\C-e\e^"'
 
 	finco() {
 		ext=${1:-''}
@@ -88,12 +88,12 @@ readonly BREW_PREFIX=/usr/local
 		find ${dir} -name "*${ext}" | peco
 	}
 
-	__gh__() {
+	__peco_github__() {
 		find ${HOME}/github.com -type d -maxdepth 2 | peco
 	}
 
 	pd() {
-		cd $(__gh__)
+		cd $(__peco_github__)
 	}
 }
 
