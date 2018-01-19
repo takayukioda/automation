@@ -78,7 +78,13 @@ readonly BREW_PREFIX=/usr/local
 
 : "functions" && {
 	__peco_history__() {
-		sed -E 's/^ +[0-9]+\*? *//' <(history) | sort | uniq | peco
+		# focused on getting unique command list
+		# sed -E 's/^ +[0-9]+\*? *//' <(history) | sort | uniq | peco --prompt "HISTORY>"
+
+		# focused on going back history even commands are duplicated
+		# `tar -r` for reversing the all lines
+		# note: `-r` option in tail command is only available on mac
+		sed -E 's/^ +[0-9]+\*? *//' <(history) | tail -r | peco --prompt "HISTORY>"
 	}
 	bind '"\C-r": "\C-e\C-u`__peco_history__`\e\C-e\e^"'
 
@@ -94,6 +100,16 @@ readonly BREW_PREFIX=/usr/local
 
 	pd() {
 		cd $(__peco_github__)
+	}
+
+	mkpasswd() {
+		LC_CTYPE=C </dev/urandom tr -dc '_A-Z-a-z-0-9!@#$%^&*/=+.,-' | head -c ${1:-16}; echo ""
+	}
+
+	github() {
+		local repo=$(pwd | grep -E --only-match 'github.com/[^/]*/[^/]*')
+		[ -z "$repo" ] && echo "pwd does not match with github url" >&2 && return
+		echo "opening https://${repo}" && open -a safari "https://${repo}"
 	}
 }
 
