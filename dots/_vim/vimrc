@@ -117,7 +117,7 @@ set smartcase
 set wrapscan
 set noincsearch
 
-colorscheme slate
+colorscheme peachpuff
 "}}}
 "
 "File Type and Coding Style {{{
