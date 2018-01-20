@@ -19,6 +19,12 @@ readonly BREW_PREFIX=/usr/local
 	if [ -f $BREW_PREFIX/etc/bash_completion ] && ! shopt -oq posix; then
 		. $BREW_PREFIX/etc/bash_completion
 	fi
+
+	if [ -d $BREW_PREFIX/etc/bash_completion.d ] && ! shopt -oq posix; then
+		COMPLETION_DIR=$BREW_PREFIX/etc/bash_completion.d
+		[ -f $COMPLETION_DIR/git-completion.bash ] && . $COMPLETION_DIR/git-completion.bash
+		[ -f $COMPLETION_DIR/aws_bash_completer ] && . $COMPLETION_DIR/aws_bash_completer
+	fi
 }
 
 # brew --prefix bash-git-prompt: /usr/local/opt/bash-git-prompt
