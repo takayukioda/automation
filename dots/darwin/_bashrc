@@ -113,9 +113,28 @@ readonly BREW_PREFIX=/usr/local
 	}
 
 	github() {
+		local where=$1
 		local repo=$(pwd | grep -E --only-match 'github.com/[^/]*/[^/]*')
 		[ -z "$repo" ] && echo "pwd does not match with github url" >&2 && return
-		echo "opening https://${repo}" && open -a safari "https://${repo}"
+		case "${where}" in
+			"issue"|"issues")
+				if [ -z "${number}" ]; then
+					echo "opening https://${repo}/issues" && open -a safari "https://${repo}/issues"
+				else 
+					echo "opening https://${repo}/issues/${number}" && open -a safari "https://${repo}/issues/${number}"
+				fi
+				;;
+			"pull"|"pulls")
+				if [ -z "${number}" ]; then
+					echo "opening https://${repo}/pulls" && open -a safari "https://${repo}/pulls"
+				else 
+					echo "opening https://${repo}/pull/${number}" && open -a safari "https://${repo}/pull/${number}"
+				fi
+				;;
+			*)
+				echo "opening https://${repo}" && open -a safari "https://${repo}"
+				;;
+		esac
 	}
 }
 
