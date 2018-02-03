@@ -41,7 +41,7 @@ readonly BREW_PREFIX=/usr/local
 
 : "prompt" && {
 	# assume we have color support
-	PS1='\[\e]0;\w\a\]\[\e[33m\]\w\[\e[35m\]$(${gitps1})\n\[\e[36m\]\D{%R} \[\e[32m\]\u@\h\[\e[0m\] \$ '
+	PS1='\[\e]0;\w\a\]\[\e[33m\]\w\[\e[35m\]$(${gitps1})\n\[\e[36m\]\D{%m-%d %R} \[\e[32m\]\u@\h\[\e[0m\] \$ '
 	case ${TERM} in
 		eterm-color | dumb )
 			PS1='\w$(${gitps1})\n\D{%R} \u@\h \$ '
@@ -69,8 +69,10 @@ readonly BREW_PREFIX=/usr/local
 		[ "$LC_CTYPE" = 'UTF-8' ] && export LC_CTYPE='en_US.UTF-8'
 		[ -z "$LANG" ] && export LANG='en_US.UTF-8'
 
-		export TERM
-		export PS1
+		: "prompt" && {
+			export TERM
+			export PS1
+		}
 	}
 
 	: "aws" && {
@@ -95,13 +97,13 @@ readonly BREW_PREFIX=/usr/local
 	bind '"\C-r": "\C-e\C-u`__peco_history__`\e\C-e\e^"'
 
 	finco() {
-		ext=${1:-''}
-		dir=${2:-.}
-		find ${dir} -name "*${ext}" | peco
+		local ext=${1:-''}
+		local dir=${2:-.}
+		find ${dir} -name "*${ext}" | peco --prompt "${ext:-FILE}>"
 	}
 
 	__peco_github__() {
-		find ${HOME}/github.com -type d -maxdepth 2 | peco
+		find ${HOME}/github.com -type d -maxdepth 2 | peco --prompt "PROJECT>"
 	}
 
 	pd() {
@@ -114,6 +116,7 @@ readonly BREW_PREFIX=/usr/local
 
 	github() {
 		local where=$1
+		local number=$2
 		local repo=$(pwd | grep -E --only-match 'github.com/[^/]*/[^/]*')
 		[ -z "$repo" ] && echo "pwd does not match with github url" >&2 && return
 		case "${where}" in
