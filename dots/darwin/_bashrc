@@ -110,6 +110,14 @@ readonly BREW_PREFIX=/usr/local
 		cd $(__peco_github__)
 	}
 
+	__peco_go__() {
+		find -L ${HOME}/go/src -type d -maxdepth 3 | peco --prompt "GO>"
+	}
+	gd() {
+		cd $(__peco_go__)
+	}
+
+
 	mkpasswd() {
 		LC_CTYPE=C </dev/urandom tr -dc '_A-Z-a-z-0-9!@#$%^&*/=+.,-' | head -c ${1:-16}; echo ""
 	}
