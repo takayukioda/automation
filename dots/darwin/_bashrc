@@ -122,6 +122,28 @@ readonly BREW_PREFIX=/usr/local
 		LC_CTYPE=C </dev/urandom tr -dc '_A-Z-a-z-0-9!@#$%^&*/=+.,-' | head -c ${1:-16}; echo ""
 	}
 
+	clone () {
+		readonly local HOST=${3:-github.com}
+		readonly local ACCOUNT=${2:-takayukioda}
+		readonly local REPOSITORY=${1}
+
+		readonly local PROJECT_ROOT=${HOME}/${HOST}
+
+		if [ ! -d ${ACCOUNT} ]; then
+			echo "Creating account directory ${ACCOUNT}"
+			mkdir -p ${PROJECT_ROOT}/${ACCOUNT}
+		fi
+		if [ -d ${REPOSITORY} ]; then
+			echo "Repository already cloned"
+			return
+		fi
+
+		cd ${PROJECT_ROOT}/${ACCOUNT}
+
+		git clone ${HOST}:${ACCOUNT}/${REPOSITORY}.git && \
+			echo "${ACCOUNT}/${REPOSITORY} has been cloned :)"
+	}
+
 	github() {
 		local where=$1
 		local number=$2
