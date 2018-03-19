@@ -141,19 +141,20 @@ augroup vimrc_filetype
 	autocmd BufNewFile,BufRead *.gradle setlocal filetype=groovy
 
 	" Coding Style from File Type
-	autocmd FileType vim setlocal foldmethod=marker
-	autocmd FileType markdown setlocal tabstop=4 shiftwidth=4 expandtab
-	autocmd FileType html setlocal tabstop=2 shiftwidth=2 expandtab indentexpr&
-	autocmd FileType css setlocal tabstop=2 shiftwidth=2 expandtab
-	autocmd FileType scss setlocal tabstop=2 shiftwidth=2 expandtab
-	autocmd FileType javascript setlocal tabstop=2 shiftwidth=2 expandtab
 	autocmd FileType coffee setlocal tabstop=2 shiftwidth=2 expandtab
+	autocmd FileType css setlocal tabstop=2 shiftwidth=2 expandtab
+	autocmd FileType gitcommit setlocal spell spelllang=en_us
+	autocmd FileType html setlocal tabstop=2 shiftwidth=2 expandtab indentexpr&
+	autocmd FileType javascript setlocal tabstop=2 shiftwidth=2 expandtab
+	autocmd FileType jinja setlocal tabstop=4 shiftwidth=4 expandtab
 	autocmd FileType json setlocal tabstop=2 shiftwidth=2 expandtab
+	autocmd FileType markdown setlocal tabstop=4 shiftwidth=4 expandtab
+	autocmd FileType php setlocal tabstop=4 shiftwidth=4
 	autocmd FileType python setlocal tabstop=4 shiftwidth=4 expandtab
 	autocmd FileType ruby setlocal tabstop=2 shiftwidth=2 expandtab
-	autocmd FileType php setlocal tabstop=4 shiftwidth=4
-	autocmd FileType jinja setlocal tabstop=4 shiftwidth=4 expandtab
-	autocmd FileType gitcommit setlocal spell spelllang=en_us
+	autocmd FileType scss setlocal tabstop=2 shiftwidth=2 expandtab
+	autocmd FileType typescript.tsx setlocal tabstop=2 shiftwidth=2 expandtab
+	autocmd FileType vim setlocal foldmethod=marker
 	autocmd FileType yaml setlocal tabstop=2 shiftwidth=2 expandtab
 	autocmd FileType * setlocal formatoptions-=ro
 augroup END
