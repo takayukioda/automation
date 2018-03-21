@@ -187,6 +187,9 @@ endif
 " vim-plug {{{
 call plug#begin('~/.vim/plugged')
 
+" Vim usability
+Plug 'ctrlpvim/ctrlp.vim'
+
 " JavaScript
 Plug 'pangloss/vim-javascript'
 " " jsx
