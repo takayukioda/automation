@@ -1,6 +1,7 @@
 [user]
 	name = takayukioda
 	email = takayuki@odashi.me
+	signingkey = 14D0EB6E54DDD196
 [core]
 	editor = vim
 	pager = less -r -FX
@@ -38,6 +39,8 @@
 	conflictstyle = diff3
 [github]
 	user = takayukioda
+[url "git@github.com:"]
+	insteadOf = "https://github.com/"
 [filter "media"]
 	clean = git-media-clean %f
 	smudge = git-media-smudge %f
@@ -47,3 +50,5 @@
 [mergetool "sourcetree"]
 	cmd = /Applications/SourceTree.app/Contents/Resources/opendiff-w.sh \"$LOCAL\" \"$REMOTE\" -ancestor \"$BASE\" -merge \"$MERGED\"
 	trustExitCode = true
+[commit]
+	gpgsign = true
