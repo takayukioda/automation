@@ -107,7 +107,8 @@ readonly BREW_PREFIX=/usr/local
 	}
 
 	pd() {
-		cd $(__peco_github__)
+		local jump_to=$(__peco_github__)
+		cd ${jump_to:-.}
 	}
 
 	__peco_go__() {
