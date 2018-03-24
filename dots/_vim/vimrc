@@ -189,6 +189,12 @@ call plug#begin('~/.vim/plugged')
 
 " Vim usability
 Plug 'ctrlpvim/ctrlp.vim'
+" keep cache on exit
+let g:ctrlp_clear_cache_on_exit = 0
+let g:ctrlp_lazy_update = 1
+let g:ctrlp_custom_ignore = {
+	\ 'dir': 'node_modules',
+	\ }
 
 " JavaScript
 Plug 'pangloss/vim-javascript'
