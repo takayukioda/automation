@@ -92,7 +92,7 @@ readonly BREW_PREFIX=/usr/local
 		# focused on going back history even commands are duplicated
 		# `tar -r` for reversing the all lines
 		# note: `-r` option in tail command is only available on mac
-		sed -E 's/^ +[0-9]+\*? *//' <(history) | tail -r | peco --prompt "HISTORY>"
+		sed -E 's/^ *[0-9]+\*? *//' <(history) | tail -r | peco --prompt "HISTORY>"
 	}
 	bind '"\C-r": "\C-e\C-u`__peco_history__`\e\C-e\e^"'
 
