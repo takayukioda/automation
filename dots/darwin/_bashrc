@@ -124,11 +124,11 @@ readonly BREW_PREFIX=/usr/local
 	}
 
 	clone () {
-		readonly local HOST=${3:-github.com}
-		readonly local ACCOUNT=${2:-takayukioda}
-		readonly local REPOSITORY=${1}
+		local HOST=${3:-github.com}
+		local ACCOUNT=${2:-takayukioda}
+		local REPOSITORY=${1}
 
-		readonly local PROJECT_ROOT=${HOME}/${HOST}
+		local PROJECT_ROOT=${HOME}/${HOST}
 
 		if [ ! -d ${ACCOUNT} ]; then
 			echo "Creating account directory ${ACCOUNT}"
@@ -136,13 +136,18 @@ readonly BREW_PREFIX=/usr/local
 		fi
 		if [ -d ${REPOSITORY} ]; then
 			echo "Repository already cloned"
-			return
+			return 2
 		fi
 
 		cd ${PROJECT_ROOT}/${ACCOUNT}
 
 		git clone ${HOST}:${ACCOUNT}/${REPOSITORY}.git && \
-			echo "${ACCOUNT}/${REPOSITORY} has been cloned :)"
+			echo "${ACCOUNT}/${REPOSITORY} has been cloned 😉"
+		[ $? -ne 0 ] && \
+			echo "Failed to clone ${ACCOUNT}/${REPOSITORY} 😞" && \
+			return 1
+
+		cd ${PROJECT_ROOT}/${ACCOUNT}/${REPOSITORY}
 	}
 
 	github() {
