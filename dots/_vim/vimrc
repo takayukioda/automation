@@ -13,7 +13,6 @@ endif
 " }}}
 
 " Environment {{{
-command! VimrcReload source $MYVIMRC
 function! VimrcEnvironment ()
 	let env = {}
 	let env.is_win = has('win32')  || has ('win64')
@@ -36,6 +35,14 @@ endfunction
 
 let s:env = VimrcEnvironment()
 let s:supports = VimrcSupports()
+" }}}
+
+" Custom command {{{
+command! VimrcReload source $MYVIMRC
+command! Tig terminal ++close tig
+command! TigBlame terminal ++close tig blame -- %
+command! TigLog terminal ++close tig log -- %
+command! Vterminal vert terminal ++close
 " }}}
 
 " Mapping {{{
@@ -109,6 +116,7 @@ set listchars=tab:^\ ,eol:~,trail:_,nbsp:%
 set tabstop=4
 set shiftwidth=4
 set softtabstop=0
+set pastetoggle=<F7>
 
 " Search
 set hlsearch
@@ -144,6 +152,7 @@ augroup vimrc_filetype
 	" autocmd BufNewFile,BufRead *.vue setlocal filetype=vue.html.javascript.css
 
 	" Coding Style from File Type
+	autocmd FileType * setlocal formatoptions-=ro
 	autocmd FileType coffee setlocal tabstop=2 shiftwidth=2 expandtab
 	autocmd FileType css setlocal tabstop=2 shiftwidth=2 expandtab
 	autocmd FileType gitcommit setlocal spell spelllang=en_us
@@ -155,11 +164,12 @@ augroup vimrc_filetype
 	autocmd FileType php setlocal tabstop=4 shiftwidth=4
 	autocmd FileType python setlocal tabstop=4 shiftwidth=4 expandtab
 	autocmd FileType ruby setlocal tabstop=2 shiftwidth=2 expandtab
+	autocmd FileType scala setlocal tabstop=2 shiftwidth=2 expandtab
 	autocmd FileType scss setlocal tabstop=2 shiftwidth=2 expandtab
+	autocmd FileType typescript setlocal tabstop=2 shiftwidth=2 expandtab
 	autocmd FileType typescript.tsx setlocal tabstop=2 shiftwidth=2 expandtab
 	autocmd FileType vim setlocal foldmethod=marker
 	autocmd FileType yaml setlocal tabstop=2 shiftwidth=2 expandtab
-	autocmd FileType * setlocal formatoptions-=ro
 
 	" help config for vue to mix muliple syntaxes
 	" https://github.com/posva/vim-vue
@@ -226,9 +236,15 @@ Plug 'rust-lang/rust.vim'
 Plug 'dag/vim2hs'
 let g:haskell_conceal = 0
 
+"Elixir
+Plug 'elixir-editors/vim-elixir'
+
 " Config
 Plug 'cespare/vim-toml'
 
+" Git
+Plug 'airblade/vim-gitgutter'
+Plug 'tpope/vim-fugitive'
 
 
 call plug#end()
