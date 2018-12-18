@@ -12,25 +12,28 @@
 [color]
 	ui = auto
 [alias]
-	life       = !echo "No Git, No Life"
 	aliass     = !git config --get-regexp alias
-	me         = !git config --get-regexp user
+	cancel     = reset --mixed HEAD^
+	fdiff      = diff --ignore-all-space --no-index
+	files      = !cd ${GIT_PREFIX:-.} && git ls-tree -z --name-only HEAD | xargs -0 -n1 -I@ -- git log -1 --pretty=format:'%C(green)%ai%Creset %C(yellow)%h%Creset @ %C(blue)(%ar)%Creset %C(red)<%an>%Creset' -- @
+	fwdiff     = diff --ignore-all-space --word-diff --no-index
+	ibase      = !sh -c 'git rebase -i $(git merge-base ${1:-master} HEAD)' -
 	l          = log --oneline
 	ld         = log --decorate --oneline
+	lg         = log --decorate --oneline --graph
+	life       = !echo "No Git, No Life"
 	lp         = log --abbrev-commit --color --pretty=format:'%C(yellow)%h%Creset -%C(yellow reverse)%d%Creset %s %C(blue)(%cr)%C(red)<%an>%Creset'
 	ls         = log --decorate --oneline --stat
-	lg         = log --decorate --oneline --graph
+	me         = !git config --get-regexp user
 	nerge      = merge --no-ff
-	purr       = pull --rebase
-	stat       = status --short --branch
-	ibase      = !sh -c 'git rebase -i $(git merge-base ${1:-master} HEAD)' -
-	unstage    = reset HEAD --
-	cancel     = reset --mixed HEAD^
-	skip       = update-index --skip-worktree
 	noskip     = update-index --no-skip-worktree
 	plune      = !git branch --merged | grep -vE '(master|develop|release|gh-pages|\\*)' | xargs git branch -d
-	files      = !cd ${GIT_PREFIX:-.} && git ls-tree -z --name-only HEAD | xargs -0 -n1 -I@ -- git log -1 --pretty=format:'%C(green)%ai%Creset %C(yellow)%h%Creset @ %C(blue)(%ar)%Creset %C(red)<%an>%Creset' -- @
-	wdiff      = diff --word-diff --ignore-all-space
+	purr       = pull --rebase
+	pwd        = rev-parse --show-prefix
+	skip       = update-index --skip-worktree
+	stat       = !git stash list && git status --short --branch
+	unstage    = reset HEAD --
+	wdiff      = diff --ignore-all-space --word-diff
 [help]
 	autocorrect = 0
 [push]
