@@ -134,12 +134,15 @@ readonly BREW_PREFIX=/usr/local
 			echo "Creating account directory ${ACCOUNT}"
 			mkdir -p ${PROJECT_ROOT}/${ACCOUNT}
 		fi
+
+		cd ${PROJECT_ROOT}/${ACCOUNT}
+
 		if [ -d ${REPOSITORY} ]; then
 			echo "Repository already cloned"
+			cd ${PROJECT_ROOT}/${ACCOUNT}/${REPOSITORY}
 			return 2
 		fi
 
-		cd ${PROJECT_ROOT}/${ACCOUNT}
 
 		git clone ${HOST}:${ACCOUNT}/${REPOSITORY}.git && \
 			echo "${ACCOUNT}/${REPOSITORY} has been cloned 😉"
