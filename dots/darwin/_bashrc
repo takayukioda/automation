@@ -85,72 +85,88 @@ readonly BREW_PREFIX=/usr/local
 }
 
 : "functions" && {
-	__peco_history__() {
-		# focused on getting unique command list
-		# sed -E 's/^ +[0-9]+\*? *//' <(history) | sort | uniq | peco --prompt "HISTORY>"
-
-		# focused on going back history even commands are duplicated
-		# `tar -r` for reversing the all lines
-		# note: `-r` option in tail command is only available on mac
-		sed -E 's/^ *[0-9]+\*? *//' <(history) | tail -r | peco --prompt "HISTORY>"
-	}
-	bind '"\C-r": "\C-e\C-u`__peco_history__`\e\C-e\e^"'
-
-	finco() {
-		local ext=${1:-''}
-		local dir=${2:-.}
-		find ${dir} -name "*${ext}" | peco --prompt "${ext:-FILE}>"
+	__history_without_id__() {
+		sed -E 's/^ *[0-9]+\*? *//' <(history)
 	}
 
-	__peco_github__() {
-		find ${HOME}/github.com -type d -maxdepth 2 | peco --prompt "PROJECT>"
+	: "fzf" && which fzf &>/dev/null && {
+		__fzf_history__() {
+			__history_without_id__ | fzf --prompt="History>" --tac --no-sort --select-1 --exit-0
+		}
+		bind '"\C-r": "\C-e\C-u`__fzf_history__`\e\C-e\e^"'
+
+		finz() {
+			local ext=${1:-''}
+			local dir=${2:-.}
+			find ${dir} -name "*${ext}" | fzf --prompt="${ext:-File}>" --select-1 --exit-0
+		}
+
+		__fzf_github__() {
+			find -L ${HOME}/github.com -type d -maxdepth 2 | fzf --prompt="Project>" --query="$1" --select-1 --exit-0
+		}
+
+		fd() {
+			local to=$(__fzf_github__ $1)
+			cd ${to:-.}
+		}
+		__fzf_npmrun__() {
+			local cur prev cword
+			_get_comp_words_by_ref -n : cur prev cword
+			if [ "$prev" = "run" ]; then
+				COMPREPLY=$(jq -r '.scripts | keys[]' package.json | fzf --query=$cur --select-1 --exit-0)
+			fi
+		}
+		complete -F __fzf_npmrun__ npm
 	}
 
-	pd() {
-		local jump_to=$(__peco_github__)
-		cd ${jump_to:-.}
+	: "peco" && which peco &>/dev/null && {
+		__peco_history__() {
+			# focused on getting unique command list
+			# sed -E 's/^ +[0-9]+\*? *//' <(history) | sort | uniq | peco --prompt "HISTORY>"
+
+			# focused on going back history even commands are duplicated
+			# `tar -r` for reversing the all lines
+			# note: `-r` option in tail command is only available on mac
+			sed -E 's/^ *[0-9]+\*? *//' <(history) | tail -r | peco --prompt="History>"
+		}
+		# bind '"\C-r": "\C-e\C-u`__peco_history__`\e\C-e\e^"'
+
+		finco() {
+			local ext=${1:-''}
+			local dir=${2:-.}
+			find ${dir} -name "*${ext}" | peco --prompt="${ext:-File}>"
+		}
+
+		__peco_github__() {
+			find -L ${HOME}/github.com -type d -maxdepth 2 | peco --prompt="Project>" --query=$1
+		}
+
+		pd() {
+			local to=$(__peco_github__ $1)
+			cd ${to:-.}
+		}
+
+		__peco_npmrun__() {
+			local cur prev cword
+			_get_comp_words_by_ref -n : cur prev cword
+			if [ "$prev" = "run" ]; then
+				COMPREPLY=$(jq -r '.scripts | keys[]' package.json | peco --query=$cur)
+			fi
+		}
+		# complete -F __peco_npmrun__ npm
+
+		__peco_go__() {
+			find -L ${HOME}/go/src -type d -maxdepth 3 | peco --prompt "GO>"
+		}
+		gd() {
+			cd $(__peco_go__)
+		}
 	}
 
-	__peco_go__() {
-		find -L ${HOME}/go/src -type d -maxdepth 3 | peco --prompt "GO>"
-	}
-	gd() {
-		cd $(__peco_go__)
-	}
 
 
 	mkpasswd() {
 		LC_CTYPE=C </dev/urandom tr -dc '_A-Z-a-z-0-9!@#$%^&*/=+.,-' | head -c ${1:-16}; echo ""
-	}
-
-	clone () {
-		local HOST=${3:-github.com}
-		local ACCOUNT=${2:-takayukioda}
-		local REPOSITORY=${1}
-
-		local PROJECT_ROOT=${HOME}/${HOST}
-
-		if [ ! -d ${ACCOUNT} ]; then
-			echo "Creating account directory ${ACCOUNT}"
-			mkdir -p ${PROJECT_ROOT}/${ACCOUNT}
-		fi
-
-		cd ${PROJECT_ROOT}/${ACCOUNT}
-
-		if [ -d ${REPOSITORY} ]; then
-			echo "Repository already cloned"
-			cd ${PROJECT_ROOT}/${ACCOUNT}/${REPOSITORY}
-			return 2
-		fi
-
-
-		git clone ${HOST}:${ACCOUNT}/${REPOSITORY}.git && \
-			echo "${ACCOUNT}/${REPOSITORY} has been cloned 😉"
-		[ $? -ne 0 ] && \
-			echo "Failed to clone ${ACCOUNT}/${REPOSITORY} 😞" && \
-			return 1
-
-		cd ${PROJECT_ROOT}/${ACCOUNT}/${REPOSITORY}
 	}
 
 	github() {
@@ -178,8 +194,42 @@ readonly BREW_PREFIX=/usr/local
 				;;
 		esac
 	}
+
+	clone () {
+		local HOST=${3:-github.com}
+		local ACCOUNT=${2:-takayukioda}
+		local REPOSITORY=${1}
+
+		local PROJECT_ROOT=${HOME}/${HOST}
+
+		if [ ! -d ${ACCOUNT} ]; then
+			echo "Creating account directory ${ACCOUNT}"
+			mkdir -p ${PROJECT_ROOT}/${ACCOUNT}
+		fi
+		cd ${PROJECT_ROOT}/${ACCOUNT}
+
+		if [ -d ${REPOSITORY} ]; then
+			echo "Repository already cloned"
+			cd ${PROJECT_ROOT}/${ACCOUNT}/${REPOSITORY}
+			return 2
+		fi
+
+
+		git clone ${HOST}:${ACCOUNT}/${REPOSITORY}.git && \
+			echo "${ACCOUNT}/${REPOSITORY} has been cloned 😉"
+		[ $? -ne 0 ] && \
+			echo "Failed to clone ${ACCOUNT}/${REPOSITORY} 😞" && \
+			return 1
+
+		cd ${PROJECT_ROOT}/${ACCOUNT}/${REPOSITORY}
+	}
+
 }
 
 : "load direnv" && {
-	eval "$(direnv hook bash)"
+	if which direnv &>/dev/null; then
+		eval "$(direnv hook bash)"
+	fi
 }
+
+export PATH="$HOME/.yarn/bin:$HOME/.config/yarn/global/node_modules/.bin:$PATH"

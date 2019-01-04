@@ -17,7 +17,7 @@
 	[ -n "$GOPATH" ] && PATH=${PATH}:${GOPATH}/bin
 }
 
-: "nodebrew" && {
+: "nodebrew" || {
 	[ -d ${HOME}/.nodebrew ] && export PATH=${HOME}/.nodebrew/current/bin:${PATH}
 }
 : "nvm" || {
@@ -25,7 +25,12 @@
 	. /usr/local/opt/nvm/nvm.sh
 }
 
+: "cargo" && {
+    PATH="$HOME/.cargo/bin:$PATH"
+}
+
 : "Export" && {
+
 	export LC_CTYPE=en_US.UTF-8
 	export LANG=en_US.UTF-8
 	export PATH
