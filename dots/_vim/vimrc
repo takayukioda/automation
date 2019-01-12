@@ -221,6 +221,8 @@ Plug 'leafgarland/typescript-vim'
 Plug 'ianks/vim-tsx'
 " " vue
 Plug 'posva/vim-vue'
+" Elm
+Plug 'elmcast/elm-vim'
 
 
 " Scala
